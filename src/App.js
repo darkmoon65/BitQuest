@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import logo from "./logo.png";
 import play from "./play.png";
-import menu from "./menu.png";
+import heart from "./heart.png";
+import sound from "./ongame_sound.mp3";
+import "./App.css";
+
 import img1 from "./image1.png";
 import img2 from "./image2.png";
 import img3 from "./image3.png";
@@ -20,10 +23,8 @@ import puzzle1 from "./puzzle1.png";
 import puzzle2 from "./puzzle2.png";
 import puzzle3 from "./puzzle3.png";
 import puzzle4 from "./puzzle4.png";
-
-import heart from "./heart.png";
-import sound from "./ongame_sound.mp3";
-import "./App.css";
+import check from "./check.png";
+import equis from "./equis.png";
 
 const containerStyle = {
   display: "grid",
@@ -68,6 +69,11 @@ const buttonStyle = {
   fontSize: "20px",
 };
 
+const incorrectButtonStyle = {
+  ...buttonStyle,
+  background: "linear-gradient(to bottom, #FF0000, #800000)",
+};
+
 const algorithmOptions = [
   "c, e, d, g, f, h, a, b, i",
   "c, f, e, d, b, h, a, g, i",
@@ -83,7 +89,7 @@ function App() {
   const iconInit = useRef(null);
   const [message, setMessage] = useState("");
   const [buttonText, setButtonText] = useState("CONTINUAR");
-  const [buttonColor, setButtonColor] = useState(buttonStyle.background);
+  const [buttonStyleState, setButtonStyleState] = useState(buttonStyle);
   const [cantidadVidas, setCantidadVidas] = useState([1, 1, 1]);
   const [visiblePuzzle, setVisiblePuzzle] = useState(null);
 
@@ -102,11 +108,13 @@ function App() {
   const handleCardClick = (option) => {
     if (option === correctAnswer) {
       setMessage("LO HICISTE MUY BIEN");
-      setButtonColor(buttonStyle.background);
+      setButtonStyleState(buttonStyle);
+      setButtonText("CONTINUAR");
       setVisiblePuzzle(puzzle1);
     } else {
-      setMessage("Tranqui, vuelve a intentarlo");
-      setButtonColor("linear-gradient(to bottom,  #FF0000, #800000)");
+      setMessage("TRANQUI, INTÉNTALO DE NUEVO");
+      setButtonStyleState(incorrectButtonStyle);
+      setButtonText("VOLVER A INTENTARLO");
       let newList = [...cantidadVidas];
       newList.pop();
       setCantidadVidas(newList);
@@ -116,23 +124,23 @@ function App() {
   const handleImageClick = (imageIndex) => {
     if (fase === 4 && imageIndex === 11) {
       setMessage("LO HICISTE MUY BIEN");
-      setButtonColor(buttonStyle.background);
-      setVisiblePuzzle(puzzle2);
+      setButtonStyleState(buttonStyle);
       setButtonText("CONTINUAR");
+      setVisiblePuzzle(puzzle2);
     } else if (fase === 5 && imageIndex === 5) {
       setMessage("LO HICISTE MUY BIEN");
-      setButtonColor(buttonStyle.background);
-      setVisiblePuzzle(puzzle3);
+      setButtonStyleState(buttonStyle);
       setButtonText("CONTINUAR");
+      setVisiblePuzzle(puzzle3);
     } else if (fase === 6 && imageIndex === 0) {
       setMessage("LO HICISTE MUY BIEN");
-      setButtonColor(buttonStyle.background);
-      setVisiblePuzzle(puzzle4);
+      setButtonStyleState(buttonStyle);
       setButtonText("CONTINUAR");
+      setVisiblePuzzle(puzzle4);
     } else {
-      setMessage("Tranqui, vuelve a intentarlo");
-      setButtonColor("linear-gradient(to bottom,  #FF0000, #800000)");
-      setButtonText("VOLVER A ELEGIR");
+      setMessage("TRANQUI, INTÉNTALO DE NUEVO");
+      setButtonStyleState(incorrectButtonStyle);
+      setButtonText("VOLVER A INTENTARLO");
       let newList = [...cantidadVidas];
       newList.pop();
       setCantidadVidas(newList);
@@ -208,6 +216,7 @@ function App() {
       </>
     );
   };
+
   const renderAlgoritmo = () => {
     return algorithmOptions.map((option, index) => (
       <div
@@ -271,11 +280,8 @@ function App() {
             <div style={cardContainerStyle}>{renderCards()}</div>
             <div style={titleStyle}>{message}</div>
             {renderPuzzle()}
-            <button
-              style={{ ...buttonStyle, background: buttonColor }}
-              onClick={() => setFase(4)}
-            >
-              CONTINUAR
+            <button style={buttonStyleState} onClick={() => setFase(4)}>
+              {buttonText}
             </button>
           </header>
         </>
@@ -307,11 +313,8 @@ function App() {
             <div style={cardContainerStyle}>{renderAlgoritmo()}</div>
             <div style={titleStyle}>{message}</div>
             {renderPuzzle()}
-            <button
-              style={{ ...buttonStyle, background: buttonColor }}
-              onClick={() => setFase(5)}
-            >
-              CONTINUAR
+            <button style={buttonStyleState} onClick={() => setFase(5)}>
+              {buttonText}
             </button>
           </header>
         </>
@@ -333,7 +336,7 @@ function App() {
             <div style={titleStyle}>{message}</div>
             {renderPuzzle()}
             <button
-              style={{ ...buttonStyle, background: buttonColor }}
+              style={buttonStyleState}
               onClick={() => setFase(buttonText === "CONTINUAR" ? 6 : 5)}
             >
               {buttonText}
@@ -357,10 +360,7 @@ function App() {
             <div style={cardContainerStyle}>{renderPadresIA()}</div>
             <div style={titleStyle}>{message}</div>
             {renderPuzzle()}
-            <button
-              style={{ ...buttonStyle, background: buttonColor }}
-              onClick={() => setFase(2)}
-            >
+            <button style={buttonStyleState} onClick={() => setFase(2)}>
               {buttonText}
             </button>
           </header>
