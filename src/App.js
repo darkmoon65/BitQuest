@@ -16,6 +16,10 @@ import img12 from "./image12.jpg";
 import img13 from "./image13.jpg";
 import img14 from "./image14.jpg";
 import img15 from "./image15.jpg";
+import puzzle1 from "./puzzle1.png";
+import puzzle2 from "./puzzle2.png";
+import puzzle3 from "./puzzle3.png";
+import puzzle4 from "./puzzle4.png";
 
 import heart from "./heart.png";
 import sound from "./ongame_sound.mp3";
@@ -81,6 +85,7 @@ function App() {
   const [buttonText, setButtonText] = useState("CONTINUAR");
   const [buttonColor, setButtonColor] = useState(buttonStyle.background);
   const [cantidadVidas, setCantidadVidas] = useState([1, 1, 1]);
+  const [visiblePuzzle, setVisiblePuzzle] = useState(null);
 
   const playSoundFunction = (event) => {
     audio.play();
@@ -98,6 +103,7 @@ function App() {
     if (option === correctAnswer) {
       setMessage("LO HICISTE MUY BIEN");
       setButtonColor(buttonStyle.background);
+      setVisiblePuzzle(puzzle1);
     } else {
       setMessage("Tranqui, vuelve a intentarlo");
       setButtonColor("linear-gradient(to bottom,  #FF0000, #800000)");
@@ -108,18 +114,36 @@ function App() {
   };
 
   const handleImageClick = (imageIndex) => {
-    if (imageIndex === 5) {
+    if (fase === 4 && imageIndex === 11) {
+      setMessage("LO HICISTE MUY BIEN");
+      setButtonColor(buttonStyle.background);
+      setVisiblePuzzle(puzzle2);
+      setButtonText("CONTINUAR");
+    } else if (fase === 5 && imageIndex === 5) {
+      setMessage("LO HICISTE MUY BIEN");
+      setButtonColor(buttonStyle.background);
+      setVisiblePuzzle(puzzle3);
+      setButtonText("CONTINUAR");
+    } else if (fase === 6 && imageIndex === 0) {
+      setMessage("LO HICISTE MUY BIEN");
+      setButtonColor(buttonStyle.background);
+      setVisiblePuzzle(puzzle4);
+      setButtonText("CONTINUAR");
+    } else {
       setMessage("Tranqui, vuelve a intentarlo");
       setButtonColor("linear-gradient(to bottom,  #FF0000, #800000)");
       setButtonText("VOLVER A ELEGIR");
       let newList = [...cantidadVidas];
       newList.pop();
       setCantidadVidas(newList);
-    } else {
-      setMessage("LO HICISTE MUY BIEN");
-      setButtonColor(buttonStyle.background);
-      setButtonText("CONTINUAR");
     }
+  };
+
+  const renderPuzzle = () => {
+    if (visiblePuzzle) {
+      return <img src={visiblePuzzle} alt="Puzzle" width={300} height={300} />;
+    }
+    return null;
   };
 
   const renderCards = () => {
@@ -170,16 +194,16 @@ function App() {
     return (
       <>
         <div style={cardStyle} onClick={() => handleImageClick(0)}>
-          <img src={img12} alt={`Image 6`} width={200} height={200} />
+          <img src={img12} alt={`Image 12`} width={200} height={200} />
         </div>
         <div style={cardStyle} onClick={() => handleImageClick(1)}>
-          <img src={img13} alt={`Image 7`} width={200} height={200} />
+          <img src={img13} alt={`Image 13`} width={200} height={200} />
         </div>
         <div style={cardStyle} onClick={() => handleImageClick(2)}>
-          <img src={img14} alt={`Image 8`} width={200} height={200} />
+          <img src={img14} alt={`Image 14`} width={200} height={200} />
         </div>
         <div style={cardStyle} onClick={() => handleImageClick(3)}>
-          <img src={img15} alt={`Image 9`} width={200} height={200} />
+          <img src={img15} alt={`Image 15`} width={200} height={200} />
         </div>
       </>
     );
@@ -246,7 +270,7 @@ function App() {
             <div style={titleStyle}>¿Cuál de estos no es un computador?</div>
             <div style={cardContainerStyle}>{renderCards()}</div>
             <div style={titleStyle}>{message}</div>
-
+            {renderPuzzle()}
             <button
               style={{ ...buttonStyle, background: buttonColor }}
               onClick={() => setFase(4)}
@@ -282,7 +306,7 @@ function App() {
             </div>
             <div style={cardContainerStyle}>{renderAlgoritmo()}</div>
             <div style={titleStyle}>{message}</div>
-
+            {renderPuzzle()}
             <button
               style={{ ...buttonStyle, background: buttonColor }}
               onClick={() => setFase(5)}
@@ -307,10 +331,10 @@ function App() {
             </div>
             <div style={cardContainerStyle}>{renderLanguajes()}</div>
             <div style={titleStyle}>{message}</div>
-
+            {renderPuzzle()}
             <button
               style={{ ...buttonStyle, background: buttonColor }}
-              onClick={() => setFase(buttonText === "CONTINUAR" ? 2 : 5)}
+              onClick={() => setFase(buttonText === "CONTINUAR" ? 6 : 5)}
             >
               {buttonText}
             </button>
@@ -332,7 +356,7 @@ function App() {
             </div>
             <div style={cardContainerStyle}>{renderPadresIA()}</div>
             <div style={titleStyle}>{message}</div>
-
+            {renderPuzzle()}
             <button
               style={{ ...buttonStyle, background: buttonColor }}
               onClick={() => setFase(2)}
